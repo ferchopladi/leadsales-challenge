@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leadsales — Configuración del Asistente Virtual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand:    #6246EA;
+    --brand-60: #7C5FF5;
+    --brand-10: #EBE8FC;
+    --brand-05: #F5F3FE;
+    --dark:     #1A1A2E;
+    --grey-80:  #374151;
+    --grey-60:  #6B7280;
+    --grey-30:  #D1D5DB;
+    --grey-10:  #F3F4F6;
+    --grey-05:  #F9FAFB;
+    --white:    #FFFFFF;
+    --green:    #2D9F70;
+    --green-10: #D1FAE5;
+    --amber:    #F59E0B;
+    --amber-10: #FEF3C7;
+    --red:      #EF4444;
+    --bg:       #F5F5FA;
+    --radius:   12px;
+    --radius-sm:8px;
+    --shadow:   0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+    --shadow-md:0 4px 20px rgba(98,70,234,.12);
+  }
+
+  html, body { height: 100%; font-family: 'Sora', sans-serif; background: #E8E8F0; }
+
+  /* ── BROWSER CHROME ── */
+  .browser {
+    width: 1440px; min-height: 100vh;
+    margin: 0 auto;
+    background: var(--white);
+    box-shadow: 0 0 60px rgba(0,0,0,.2);
+    display: flex; flex-direction: column;
+  }
+  .browser-chrome {
+    background: #DEDEE8;
+    padding: 8px 12px 0;
+    flex-shrink: 0;
+  }
+  .browser-dots { display: flex; gap: 6px; padding: 6px 0 8px; }
+  .browser-dots span {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .browser-dots span:nth-child(1) { background: #FF5F57; }
+  .browser-dots span:nth-child(2) { background: #FEBC2E; }
+  .browser-dots span:nth-child(3) { background: #28C840; }
+  .browser-tab {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--white); border-radius: 8px 8px 0 0;
+    padding: 6px 14px; font-size: 12px; color: var(--grey-60);
+    font-family: 'Inter', sans-serif;
+  }
+  .browser-tab-icon { width: 14px; height: 14px; background: var(--brand-10); border-radius: 3px; }
+  .browser-urlbar {
+    background: #E8E8F0; display: flex; gap: 12px;
+    align-items: center; padding: 6px 12px;
+  }
+  .browser-nav { display: flex; gap: 8px; }
+  .browser-nav button {
+    background: none; border: none; cursor: pointer;
+    color: #888; font-size: 14px; padding: 2px 4px;
+    font-family: 'Inter', sans-serif;
+  }
+  .browser-url {
+    flex: 1; background: var(--white); border: none;
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 12px; color: var(--grey-60);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    height: 80px; background: var(--white);
+    border-bottom: 1px solid var(--grey-10);
+    display: flex; align-items: center;
+    padding: 0 48px;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .logo { font-size: 24px; font-weight: 700; letter-spacing: -.5px; }
+  .logo span:first-child { color: var(--dark); }
+  .logo span:last-child  { color: var(--brand); }
+  .topbar-user { display: flex; align-items: center; gap: 12px; }
+  .topbar-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--brand-10); color: var(--brand);
+    font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .topbar-info { text-align: right; }
+  .topbar-info strong { display: block; font-size: 14px; color: var(--dark); }
+  .topbar-info small { font-size: 11px; color: var(--grey-60); }
+  .topbar-icons { display: flex; gap: 4px; margin-left: 16px; }
+  .topbar-icons button {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--grey-30); background: var(--white);
+    cursor: pointer; color: var(--grey-60); font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── SCREEN WRAPPER ── */
+  .screen { display: none; flex: 1; }
+  .screen.active { display: flex; }
+
+  /* ── ONBOARDING LAYOUT ── */
+  .onboarding-layout {
+    display: flex; flex: 1;
+  }
+
+  /* ── CHAT PANEL ── */
+  .chat-panel {
+    width: 440px; flex-shrink: 0;
+    background: var(--brand-10);
+    border-radius: 0 24px 24px 0;
+    margin: 24px 0 24px 24px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+  .chat-bubbles {
+    flex: 1; padding: 32px 24px 20px;
+    display: flex; flex-direction: column; gap: 16px;
+    overflow-y: auto;
+  }
+  .bubble {
+    background: var(--white);
+    border-radius: 0 16px 16px 16px;
+    padding: 14px 18px;
+    box-shadow: var(--shadow);
+    animation: bubbleIn .35s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  .bubble-role {
+    font-size: 13px; font-weight: 600;
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .bubble-role.assistant { color: var(--grey-60); }
+  .bubble-role.taquito   { color: var(--brand); }
+  .bubble-text { font-size: 14px; color: var(--grey-80); line-height: 1.55; }
+
+  /* chat input (visible in final step) */
+  .chat-input-bar {
+    background: var(--dark);
+    padding: 16px 20px;
+    display: flex; gap: 10px; align-items: center;
+    display: none;
+  }
+  .chat-input-bar.visible { display: flex; }
+  .chat-input-bar input {
+    flex: 1; background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 24px; padding: 10px 18px;
+    color: var(--white); font-size: 14px;
+    font-family: 'Sora', sans-serif;
+    outline: none;
+  }
+  .chat-input-bar input::placeholder { color: rgba(255,255,255,.4); }
+  .chat-send {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--brand); border: none; cursor: pointer;
+    color: var(--white); font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s, background .15s;
+  }
+  .chat-send:hover { background: var(--brand-60); transform: scale(1.08); }
+
+  /* typing indicator */
+  .typing {
+    display: none; align-items: center; gap: 5px; padding: 0 4px;
+  }
+  .typing.show { display: flex; }
+  .typing span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--brand); opacity: .5;
+    animation: bounce .9s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: .15s; }
+  .typing span:nth-child(3) { animation-delay: .30s; }
+
+  /* ── CONFIG PANEL ── */
+  .config-panel {
+    flex: 1; padding: 40px 56px;
+    overflow-y: auto; display: flex; flex-direction: column;
+  }
+
+  /* step indicator */
+  .steps {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 32px;
+  }
+  .step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--grey-10); border: 2px solid var(--grey-30);
+    color: var(--grey-60); font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all .3s;
+    position: relative; z-index: 1;
+  }
+  .step-dot.active {
+    background: var(--brand); border-color: var(--brand);
+    color: var(--white); box-shadow: 0 0 0 4px var(--brand-10);
+  }
+  .step-dot.done {
+    background: var(--green); border-color: var(--green); color: var(--white);
+  }
+  .step-dot.done::after { content: '✓'; font-size: 11px; }
+  .step-dot.done .dot-num { display: none; }
+  .step-line {
+    flex: 1; height: 2px; background: var(--grey-30);
+    transition: background .4s; margin: 0 -1px;
+  }
+  .step-line.done { background: var(--green); }
+
+  /* step title */
+  .step-title {
+    font-size: 28px; font-weight: 700; color: var(--brand);
+    margin-bottom: 6px; letter-spacing: -.3px;
+  }
+  .step-subtitle {
+    font-size: 15px; color: var(--grey-60); margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  /* form elements */
+  .field-label {
+    font-size: 16px; font-weight: 600; color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .field-hint {
+    font-size: 13px; color: var(--brand); margin-bottom: 12px;
+  }
+  .field-hint.grey { color: var(--grey-60); }
+  .text-input {
+    width: 100%; height: 48px;
+    border: 1.5px solid var(--grey-30);
+    border-radius: var(--radius-sm);
+    padding: 0 16px; font-size: 15px;
+    font-family: 'Sora', sans-serif;
+    color: var(--dark); background: var(--white);
+    outline: none; transition: border .2s, box-shadow .2s;
+    margin-bottom: 24px;
+  }
+  .text-input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-10);
+  }
+  .text-input::placeholder { color: var(--grey-30); }
+  .textarea {
+    width: 100%; min-height: 120px;
+    border: 1.5px solid var(--grey-30);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px; font-size: 14px;
+    font-family: 'Sora', sans-serif;
+    color: var(--dark); background: var(--white);
+    outline: none; resize: vertical;
+    transition: border .2s; margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-10); }
+
+  /* tone cards */
+  .cards-grid {
+    display: grid; gap: 12px;
+    margin-bottom: 24px;
+  }
+  .cards-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .cards-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .cards-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .card-option {
+    border: 1.5px solid var(--grey-30);
+    border-radius: var(--radius);
+    padding: 16px; cursor: pointer;
+    transition: all .2s; background: var(--white);
+  }
+  .card-option:hover { border-color: var(--brand); background: var(--brand-05); }
+  .card-option.selected {
+    border-color: var(--brand); background: var(--brand-05);
+    box-shadow: var(--shadow-md);
+  }
+  .card-option .card-icon { font-size: 22px; margin-bottom: 10px; display: block; }
+  .card-option .card-title { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+  .card-option .card-desc  { font-size: 12px; color: var(--grey-60); line-height: 1.4; }
+
+  /* days selector */
+  .days-row { display: flex; gap: 8px; margin-bottom: 24px; }
+  .day-btn {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 1.5px solid var(--grey-30);
+    background: var(--white); cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--grey-60);
+    transition: all .2s; font-family: 'Sora', sans-serif;
+  }
+  .day-btn.active {
+    background: var(--brand); border-color: var(--brand);
+    color: var(--white); box-shadow: 0 2px 8px rgba(98,70,234,.3);
+  }
+
+  /* time picker row */
+  .time-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .time-label { font-size: 14px; color: var(--grey-60); }
+  .time-select {
+    height: 44px; padding: 0 12px;
+    border: 1.5px solid var(--grey-30); border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 600; color: var(--dark);
+    font-family: 'Sora', sans-serif; background: var(--white);
+    outline: none; cursor: pointer;
+    transition: border .2s;
+  }
+  .time-select:focus { border-color: var(--brand); }
+
+  /* FAQ rows */
+  .faq-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 12px;
+  }
+  .faq-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--grey-10); color: var(--grey-60);
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .faq-row input {
+    flex: 1; height: 44px;
+    border: 1.5px solid var(--grey-30); border-radius: var(--radius-sm);
+    padding: 0 14px; font-size: 14px;
+    font-family: 'Sora', sans-serif; color: var(--dark);
+    outline: none; transition: border .2s;
+  }
+  .faq-row input:focus { border-color: var(--brand); }
+  .faq-arrow { color: var(--brand); font-size: 16px; flex-shrink: 0; }
+
+  .btn-add {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: none; border: 1.5px dashed var(--grey-30);
+    border-radius: var(--radius-sm); padding: 10px 18px;
+    font-size: 13px; color: var(--grey-60); cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    transition: all .2s;
+  }
+  .btn-add:hover { border-color: var(--brand); color: var(--brand); }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    margin-top: auto; padding-top: 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .btn-ghost {
+    background: none; border: none; cursor: pointer;
+    font-size: 15px; color: var(--brand);
+    font-family: 'Sora', sans-serif; font-weight: 600;
+    padding: 8px 0; transition: opacity .2s;
+  }
+  .btn-ghost:hover { opacity: .7; }
+  .btn-group { display: flex; gap: 12px; }
+  .btn-secondary {
+    height: 48px; padding: 0 24px;
+    border: 1.5px solid var(--grey-30); border-radius: 24px;
+    background: var(--white); cursor: pointer;
+    font-size: 15px; font-weight: 600; color: var(--dark);
+    font-family: 'Sora', sans-serif;
+    transition: all .2s;
+  }
+  .btn-secondary:hover { border-color: var(--brand); color: var(--brand); }
+  .btn-primary {
+    height: 48px; padding: 0 28px;
+    border-radius: 24px; border: none;
+    background: var(--brand); color: var(--white);
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    transition: all .2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--brand-60); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-primary:disabled { background: var(--grey-30); cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-primary.green { background: var(--green); }
+  .btn-primary.green:hover { background: #248f63; }
+
+  /* ── FINAL SCREEN ── */
+  .final-screen {
+    flex: 1; display: flex;
+  }
+  .final-config {
+    flex: 1; padding: 48px 64px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .steps-done {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 40px;
+  }
+  .steps-done .step-dot { background: var(--green); border-color: var(--green); color: var(--white); }
+  .steps-done .step-dot::after { content: '✓'; font-size: 11px; }
+  .steps-done .dot-num { display: none; }
+  .steps-done .step-line { background: var(--green); }
+
+  .final-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--green-10); font-size: 28px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .final-title { font-size: 28px; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+  .final-title span { color: var(--brand); }
+  .final-subtitle { font-size: 15px; color: var(--grey-60); line-height: 1.6; margin-bottom: 8px; }
+  .final-note { font-size: 14px; color: var(--grey-60); margin-bottom: 32px; }
+  .final-note a { color: var(--brand); font-weight: 600; }
+
+  .final-hints {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; width: 100%; max-width: 680px; margin-bottom: 40px;
+  }
+  .hint-card {
+    background: var(--white); border: 1px solid var(--grey-10);
+    border-radius: var(--radius); padding: 18px;
+    text-align: left; box-shadow: var(--shadow);
+  }
+  .hint-card .hint-icon { font-size: 20px; margin-bottom: 10px; display: block; }
+  .hint-card strong { font-size: 13px; display: block; color: var(--dark); margin-bottom: 4px; }
+  .hint-card p { font-size: 12px; color: var(--grey-60); line-height: 1.45; }
+
+  .final-ctas { display: flex; gap: 12px; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateY(8px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40%            { transform: translateY(-6px); }
+  }
+  @keyframes screenIn {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .screen.active .config-panel { animation: screenIn .3s ease both; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--grey-30); border-radius: 4px; }
+
+  /* section spacing helper */
+  .field-section { margin-bottom: 28px; }
+
+  /* reconfig screen uses same layout */
+  .reconfig-note {
+    background: var(--amber-10); border: 1px solid var(--amber);
+    border-radius: var(--radius); padding: 14px 18px;
+    font-size: 13px; color: #92400E; margin-bottom: 24px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+
+  /* toast */
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--dark); color: var(--white);
+    padding: 14px 24px; border-radius: 24px;
+    font-size: 14px; font-weight: 500;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.2);
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+    opacity: 0; z-index: 1000;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast .toast-icon { font-size: 18px; }
+
+  /* validation highlight */
+  .text-input.error, .textarea.error { border-color: var(--red); }
+  .error-msg { font-size: 12px; color: var(--red); margin-top: -18px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div class="browser">
+
+  <!-- BROWSER CHROME -->
+  <div class="browser-chrome">
+    <div class="browser-dots">
+      <span></span><span></span><span></span>
+    </div>
+    <div style="display:flex; gap:0; align-items:flex-end;">
+      <div class="browser-tab">
+        <div class="browser-tab-icon"></div>
+        Google
+      </div>
+      <div class="browser-tab" style="background:#f0f0f8; color:#6246EA; font-weight:600;">
+        <div class="browser-tab-icon" style="background:#6246EA;"></div>
+        Asistente virtual — Leadsales
+      </div>
+    </div>
+    <div class="browser-urlbar">
+      <div class="browser-nav">
+        <button>←</button><button>→</button><button>↺</button>
+      </div>
+      <input class="browser-url" type="text" value="leadsales.io/asistente/configurar" readonly>
+    </div>
+  </div>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="logo"><span>lead</span><span>sales</span></div>
+    <div class="topbar-user">
+      <div class="topbar-info">
+        <strong>Hola, Mariano Martínez</strong>
+        <small>Último inicio de sesión: 12/marzo/2026 · 13:02 h</small>
+      </div>
+      <div class="topbar-avatar">FG</div>
+      <div class="topbar-icons">
+        <button title="Ayuda">?</button>
+        <button title="Notificaciones">🔔</button>
+        <button title="Salir">⏏</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       PASO 1 — PERSONALIDAD
+  ═══════════════════════════════════════════ -->
+  <div class="screen active onboarding-layout" id="screen-1">
+    <div class="chat-panel" id="chat-1">
+      <div class="chat-bubbles" id="bubbles-1">
+        <div class="bubble">
+          <div class="bubble-role assistant">✨ Asistente</div>
+          <div class="bubble-text">Hola, Mariano Martínez. Voy a ser el asistente de tu negocio — el que atiende a tus clientes cuando tú no puedes. Necesito que me cuentes cómo eres, para sonar como tú.</div>
+        </div>
+        <div class="bubble">
+          <div class="bubble-role assistant">✨ Asistente</div>
+          <div class="bubble-text">Empieza por aquí → ponme un nombre y elige cómo quieres que suene. Mira este chat y mira cómo va quedando.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="config-panel">
+      <div class="steps">
+        <div class="step-dot active"><span class="dot-num">1</span></div>
+        <div class="step-line" id="line-1"></div>
+        <div class="step-dot" id="dot-2"><span class="dot-num">2</span></div>
+        <div class="step-line" id="line-2"></div>
+        <div class="step-dot" id="dot-3"><span class="dot-num">3</span></div>
+        <div class="step-line" id="line-3"></div>
+        <div class="step-dot" id="dot-4"><span class="dot-num">4</span></div>
+        <div class="step-line" id="line-4"></div>
+        <div class="step-dot" id="dot-5"><span class="dot-num">5</span></div>
+      </div>
+
+      <div class="step-title">Personalidad</div>
+      <div class="step-subtitle">Dale identidad a tu asistente antes de presentarlo a tus clientes.</div>
+
+      <div class="field-section">
+        <div class="field-label">¿Cómo quieres que me llame?</div>
+        <div class="field-hint">Así me verán tus clientes cuando les conteste.</div>
+        <input class="text-input" id="assistant-name" type="text" placeholder="Ej. Sofía, Asistente, Bot..." oninput="updateChatName()">
+        <div id="name-error" class="error-msg" style="display:none">Ponle un nombre a tu asistente para continuar.</div>
+      </div>
+
+      <div class="field-section">
+        <div class="field-label">¿Cómo quieres que suene?</div>
+        <div class="field-hint grey">Elige una opción y mira cómo cambia el saludo a la izquierda.</div>
+        <div class="cards-grid cols-4" id="tone-cards">
+          <div class="card-option" onclick="selectTone(this,'friendly','😊','Amigable y cálido','Cercano, usa emojis con moderación')">
+            <span class="card-icon">😊</span>
+            <div class="card-title">Amigable y cálido</div>
+            <div class="card-desc">Cercano, usa emojis con moderación</div>
+          </div>
+          <div class="card-option" onclick="selectTone(this,'direct','⚡','Directo y eficiente','Respuestas cortas, va al grano')">
+            <span class="card-icon">⚡</span>
+            <div class="card-title">Directo y eficiente</div>
+            <div class="card-desc">Respuestas cortas, va al grano</div>
+          </div>
+          <div class="card-option" onclick="selectTone(this,'creative','🎉','Entusiasta y creativo','Energético, mucha personalidad')">
+            <span class="card-icon">🎉</span>
+            <div class="card-title">Entusiasta y creativo</div>
+            <div class="card-desc">Energético, mucha personalidad</div>
+          </div>
+          <div class="card-option" onclick="selectTone(this,'pro','✨','Profesional y elegante','Formal pero accesible, sin emojis')">
+            <span class="card-icon">✨</span>
+            <div class="card-title">Profesional y elegante</div>
+            <div class="card-desc">Formal pero accesible, sin emojis</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="btn-ghost">Hacerlo después</button>
+        <div class="btn-group">
+          <button class="btn-primary" onclick="goTo(2)">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       PASO 2 — NEGOCIO
+  ═══════════════════════════════════════════ -->
+  <div class="screen onboarding-layout" id="screen-2">
+    <div class="chat-panel">
+      <div class="chat-bubbles" id="bubbles-2">
+        <div class="bubble">
+          <div class="bubble-role taquito" id="chat2-role">✨ Asistente</div>
+          <div class="bubble-text" id="chat2-text">Ahora dime cómo se llama tu negocio y a qué se dedica. Con eso ya puedo presentarlo cuando alguien pregunte.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="config-panel">
+      <div class="steps">
+        <div class="step-dot done"><span class="dot-num">1</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot active"><span class="dot-num">2</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot"><span class="dot-num">3</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot"><span class="dot-num">4</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot"><span class="dot-num">5</span></div>
+      </div>
+
+      <div class="step-title" style="color:var(--brand)">Tu negocio</div>
+      <div class="step-subtitle">Cuéntame de qué va tu negocio para que pueda presentarlo bien.</div>
+
+      <div class="field-section">
+        <div class="field-label">¿Cómo se llama tu negocio?</div>
+        <div class="field-hint grey">El nombre que usarás con tus clientes.</div>
+        <input class="text-input" id="biz-name" type="text" placeholder="Ej. Flores del Valle, Taquería El Rey..." oninput="updateBizChat()">
+      </div>
+
+      <div class="field-section">
+        <div class="field-label">¿A qué se dedica?</div>
+        <div class="field-hint grey">Elige el que más se parezca — esto ayuda a que responda con el vocabulario correcto.</div>
+        <div class="cards-grid cols-4" id="biz-cards">
+          <div class="card-option" onclick="selectBiz(this,'Tienda / Ropa','🛍')">
+            <span class="card-icon">🛍</span>
+            <div class="card-title">Tienda / Ropa</div>
+            <div class="card-desc">Venta de productos físicos</div>
+          </div>
+          <div class="card-option" onclick="selectBiz(this,'Comida / Restaurante','🍽')">
+            <span class="card-icon">🍽</span>
+            <div class="card-title">Comida / Restaurante</div>
+            <div class="card-desc">Pedidos, delivery, menú</div>
+          </div>
+          <div class="card-option" onclick="selectBiz(this,'Servicios','🔧')">
+            <span class="card-icon">🔧</span>
+            <div class="card-title">Servicios</div>
+            <div class="card-desc">Plomería, limpieza, salud…</div>
+          </div>
+          <div class="card-option" onclick="selectBiz(this,'Belleza / Spa','💅')">
+            <span class="card-icon">💅</span>
+            <div class="card-title">Belleza / Spa</div>
+            <div class="card-desc">Estética, uñas, masajes…</div>
+          </div>
+          <div class="card-option" onclick="selectBiz(this,'Flores / Regalos','🌸')">
+            <span class="card-icon">🌸</span>
+            <div class="card-title">Flores / Regalos</div>
+            <div class="card-desc">Arreglos, envíos, detalles</div>
+          </div>
+          <div class="card-option" onclick="selectBiz(this,'Inmuebles','🏠')">
+            <span class="card-icon">🏠</span>
+            <div class="card-title">Inmuebles</div>
+            <div class="card-desc">Renta, venta, asesoría</div>
+          </div>
+          <div class="card-option" onclick="selectBiz(this,'Educación','📚')">
+            <span class="card-icon">📚</span>
+            <div class="card-title">Educación</div>
+            <div class="card-desc">Cursos, clases, talleres</div>
+          </div>
+          <div class="card-option" onclick="selectBiz(this,'Otro','✏️')">
+            <span class="card-icon">✏️</span>
+            <div class="card-title">Otro</div>
+            <div class="card-desc">Lo describo yo mismo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="btn-ghost">Hacerlo después</button>
+        <div class="btn-group">
+          <button class="btn-secondary" onclick="goTo(1)">Regresar</button>
+          <button class="btn-primary" onclick="goTo(3)">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       PASO 3 — PRODUCTOS
+  ═══════════════════════════════════════════ -->
+  <div class="screen onboarding-layout" id="screen-3">
+    <div class="chat-panel">
+      <div class="chat-bubbles" id="bubbles-3">
+        <div class="bubble">
+          <div class="bubble-role taquito" id="chat3-role">✨ Asistente</div>
+          <div class="bubble-text" id="chat3-text">Ahora dime qué ofreces. Agrega tu menú o catálogo y ya puedo responder preguntas de precios y productos.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="config-panel">
+      <div class="steps">
+        <div class="step-dot done"><span class="dot-num">1</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">2</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot active"><span class="dot-num">3</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot"><span class="dot-num">4</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot"><span class="dot-num">5</span></div>
+      </div>
+
+      <div class="step-title">Lo que ofreces</div>
+      <div class="step-subtitle">¿Qué le puedes ofrecer a tus clientes? Con esto ya puedo responder preguntas de precio y productos.</div>
+
+      <div class="field-section">
+        <div class="field-label">¿Tienes una lista de lo que vendes?</div>
+        <div class="field-hint grey">Elige cómo quieres agregarlo — con esto respondo preguntas de productos sin que tengas que estar.</div>
+        <div class="cards-grid cols-3">
+          <div class="card-option selected" onclick="selectCard(this, '.cards-grid.cols-3')">
+            <span class="card-icon">📄</span>
+            <div class="card-title">Subir PDF o foto</div>
+            <div class="card-desc">Tu menú o catálogo tal como lo tienes</div>
+          </div>
+          <div class="card-option" onclick="selectCard(this, '.cards-grid.cols-3')">
+            <span class="card-icon">✏️</span>
+            <div class="card-title">Lo escribo aquí</div>
+            <div class="card-desc">Lista rápida de productos y precios</div>
+          </div>
+          <div class="card-option" onclick="selectCard(this, '.cards-grid.cols-3')">
+            <span class="card-icon">🔗</span>
+            <div class="card-title">Tengo un link</div>
+            <div class="card-desc">Menú en línea, Instagram o sitio web</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-section">
+        <div class="field-label">O escríbelos aquí rápido</div>
+        <div class="field-hint grey">Nombre del producto — precio. Uno por línea.</div>
+        <textarea class="textarea" id="products-text" placeholder="Ej:&#10;Tacos de canasta — $15 c/u&#10;Orden de 5 tacos — $65&#10;Agua de horchata 1L — $30&#10;Refresco — $20" oninput="updateProductsChat()"></textarea>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="btn-ghost">Hacerlo después</button>
+        <div class="btn-group">
+          <button class="btn-secondary" onclick="goTo(2)">Regresar</button>
+          <button class="btn-primary" onclick="goTo(4)">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       PASO 4 — HORARIOS
+  ═══════════════════════════════════════════ -->
+  <div class="screen onboarding-layout" id="screen-4">
+    <div class="chat-panel">
+      <div class="chat-bubbles" id="bubbles-4">
+        <div class="bubble">
+          <div class="bubble-role taquito" id="chat4-role">✨ Asistente</div>
+          <div class="bubble-text" id="chat4-text">Dime cuándo trabajas y qué les digo si escriben fuera de horario. Así nunca pierdes un cliente por no contestar a tiempo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="config-panel">
+      <div class="steps">
+        <div class="step-dot done"><span class="dot-num">1</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">2</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">3</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot active"><span class="dot-num">4</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot"><span class="dot-num">5</span></div>
+      </div>
+
+      <div class="step-title">Horarios</div>
+      <div class="step-subtitle">¿Cuándo pueden contactarte tus clientes? Así sé cuándo responder y qué decir si están fuera de horario.</div>
+
+      <div class="field-section">
+        <div class="field-label">¿Qué días trabajas?</div>
+        <div class="field-hint grey">Selecciona los días en que atiende tu negocio.</div>
+        <div class="days-row">
+          <button class="day-btn active" onclick="toggleDay(this)">L</button>
+          <button class="day-btn active" onclick="toggleDay(this)">M</button>
+          <button class="day-btn active" onclick="toggleDay(this)">Mi</button>
+          <button class="day-btn active" onclick="toggleDay(this)">J</button>
+          <button class="day-btn active" onclick="toggleDay(this)">V</button>
+          <button class="day-btn" onclick="toggleDay(this)">S</button>
+          <button class="day-btn" onclick="toggleDay(this)">D</button>
+        </div>
+      </div>
+
+      <div class="field-section">
+        <div class="field-label">¿En qué horario?</div>
+        <div class="field-hint grey">Así sé cuándo responder rápido y cuándo decir que ya cerraste.</div>
+        <div class="time-row">
+          <span class="time-label">De</span>
+          <select class="time-select" id="time-open" onchange="updateScheduleChat()">
+            <option>7:00 AM</option><option>8:00 AM</option>
+            <option selected>9:00 AM</option><option>10:00 AM</option>
+            <option>11:00 AM</option><option>12:00 PM</option>
+          </select>
+          <span class="time-label">a</span>
+          <select class="time-select" id="time-close" onchange="updateScheduleChat()">
+            <option>3:00 PM</option><option>4:00 PM</option>
+            <option>5:00 PM</option><option selected>6:00 PM</option>
+            <option>7:00 PM</option><option>8:00 PM</option><option>9:00 PM</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-section">
+        <div class="field-label">¿Qué pasa si alguien escribe fuera de horario?</div>
+        <div class="field-hint grey">Elige qué respondo cuando un cliente te escribe fuera de tu horario.</div>
+        <div class="cards-grid cols-3" id="offhours-cards">
+          <div class="card-option selected" onclick="selectCard(this, '#offhours-cards')">
+            <span class="card-icon">🕐</span>
+            <div class="card-title">"Te contactamos cuando abramos"</div>
+            <div class="card-desc">Aviso el horario y que pronto los atiendo</div>
+          </div>
+          <div class="card-option" onclick="selectCard(this, '#offhours-cards')">
+            <span class="card-icon">📞</span>
+            <div class="card-title">"Deja tu número, te llamamos"</div>
+            <div class="card-desc">Capturo el contacto para no perder el lead</div>
+          </div>
+          <div class="card-option" onclick="selectCard(this, '#offhours-cards')">
+            <span class="card-icon">✏️</span>
+            <div class="card-title">Escribo mi propio mensaje</div>
+            <div class="card-desc">Lo personalizo como quiero</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="btn-ghost">Hacerlo después</button>
+        <div class="btn-group">
+          <button class="btn-secondary" onclick="goTo(3)">Regresar</button>
+          <button class="btn-primary" onclick="goTo(5)">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       PASO 5 — PREGUNTAS FRECUENTES
+  ═══════════════════════════════════════════ -->
+  <div class="screen onboarding-layout" id="screen-5">
+    <div class="chat-panel">
+      <div class="chat-bubbles" id="bubbles-5">
+        <div class="bubble">
+          <div class="bubble-role taquito" id="chat5-role">✨ Asistente</div>
+          <div class="bubble-text" id="chat5-text">Agrega las preguntas que más te hacen → yo las respondo solo. Mira cómo ya contesté la de domicilio.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="config-panel">
+      <div class="steps">
+        <div class="step-dot done"><span class="dot-num">1</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">2</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">3</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">4</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot active"><span class="dot-num">5</span></div>
+      </div>
+
+      <div class="step-title">Preguntas frecuentes</div>
+      <div class="step-subtitle">Agrega las preguntas que más te hacen tus clientes. Así las respondo solo, sin que tengas que estar.</div>
+
+      <div id="faq-list">
+        <div class="faq-row">
+          <div class="faq-num">1</div>
+          <input type="text" placeholder="Pregunta 1" oninput="updateFaqChat()">
+          <div class="faq-arrow">→</div>
+          <input type="text" placeholder="Respuesta 1" oninput="updateFaqChat()">
+        </div>
+        <div class="faq-row">
+          <div class="faq-num">2</div>
+          <input type="text" placeholder="Pregunta 2" oninput="updateFaqChat()">
+          <div class="faq-arrow">→</div>
+          <input type="text" placeholder="Respuesta 2" oninput="updateFaqChat()">
+        </div>
+        <div class="faq-row">
+          <div class="faq-num">3</div>
+          <input type="text" placeholder="Pregunta 3" oninput="updateFaqChat()">
+          <div class="faq-arrow">→</div>
+          <input type="text" placeholder="Respuesta 3" oninput="updateFaqChat()">
+        </div>
+      </div>
+
+      <button class="btn-add" onclick="addFaqRow()" style="margin-top:8px; margin-bottom:24px;">
+        + Agregar otra pregunta
+      </button>
+
+      <div class="bottom-nav">
+        <button class="btn-ghost">Hacerlo después</button>
+        <div class="btn-group">
+          <button class="btn-secondary" onclick="goTo(4)">Regresar</button>
+          <button class="btn-primary green" onclick="goTo(6)">Finalizar configuración ✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       PANTALLA FINAL — SANDBOX
+  ═══════════════════════════════════════════ -->
+  <div class="screen onboarding-layout" id="screen-6">
+    <div class="chat-panel" id="chat-final">
+      <div class="chat-bubbles" id="bubbles-final">
+        <div class="bubble">
+          <div class="bubble-role taquito" id="final-chat-role">✨ Asistente</div>
+          <div class="bubble-text" id="final-chat-text">Mariano, ya terminaste de configurarme. Iré aprendiendo a medida que me usen nuestros clientes, pero también puedes seguir enseñándome.</div>
+        </div>
+        <div class="bubble">
+          <div class="bubble-role taquito" id="final-chat-role2">✨ Asistente</div>
+          <div class="bubble-text">Pregúntame algo como si fueras uno de nuestros clientes.</div>
+        </div>
+      </div>
+      <div class="chat-input-bar visible" id="sandbox-input">
+        <input type="text" id="sandbox-msg" placeholder="Escríbele algo a Taquito..." onkeydown="sendSandbox(event)">
+        <button class="chat-send" onclick="sendSandboxBtn()">➤</button>
+      </div>
+    </div>
+
+    <div class="config-panel final-config">
+      <div class="steps-done steps">
+        <div class="step-dot done"><span class="dot-num">1</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">2</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">3</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">4</span></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"><span class="dot-num">5</span></div>
+      </div>
+
+      <div class="final-icon">🤖</div>
+      <div class="final-title"><span id="final-name">Taquito</span> está listo para atender!</div>
+      <div class="final-subtitle">Ya puede responder a tus clientes. Pruébalo en el chat que está de lado izquierdo, regresa a configurarlo si quieres, o actívalo ahora.</div>
+      <div class="final-note">Siempre podrás actualizarlo en la sección <a href="#">"Asistente virtual"</a> cuando quieras.</div>
+
+      <div class="final-hints">
+        <div class="hint-card">
+          <span class="hint-icon">✏️</span>
+          <strong>Pruébalo aquí, de lado izquierdo</strong>
+          <p>Escríbele algo en el chat — responde como si fuera un cliente real.</p>
+        </div>
+        <div class="hint-card">
+          <span class="hint-icon">⚙️</span>
+          <strong>Siempre podrás actualizarlo</strong>
+          <p>Cambia nombre, tono, horarios o agrega productos cuando quieras.</p>
+        </div>
+        <div class="hint-card">
+          <span class="hint-icon">⚡</span>
+          <strong>Enséñale</strong>
+          <p>Taquito aprenderá conforme lo vayas actualizando.</p>
+        </div>
+      </div>
+
+      <div class="final-ctas">
+        <button class="btn-secondary" onclick="goTo(1)" style="height:52px; padding:0 28px; font-size:15px;">Regresar a configurar</button>
+        <button class="btn-primary green" style="height:52px; padding:0 32px; font-size:15px;" onclick="activate()">
+          Activar a <span id="activate-name">Taquito</span> →
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✅</span>
+  <span id="toast-msg">¡Asistente activado!</span>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────
+const state = {
+  name: '',
+  tone: null,
+  toneLabel: '',
+  bizName: '',
+  bizType: '',
+  products: '',
+  scheduleOpen: '9:00 AM',
+  scheduleClose: '6:00 PM',
+  faqs: []
+};
+
+// ── NAVIGATION ─────────────────────────────────────
+function goTo(step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + step).classList.add('active');
+  window.scrollTo(0,0);
+  // Update final screen name
+  const n = state.name || 'Taquito';
+  document.getElementById('final-name').textContent = n;
+  document.getElementById('activate-name').textContent = n;
+  // Update chat roles with name
+  updateAllChatRoles(n);
+}
+
+function updateAllChatRoles(name) {
+  ['chat2-role','chat3-role','chat4-role','chat5-role','final-chat-role','final-chat-role2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '✨ ' + name;
+  });
+}
+
+// ── STEP 1: NAME + TONE ────────────────────────────
+function updateChatName() {
+  state.name = document.getElementById('assistant-name').value;
+  const name = state.name || 'Asistente';
+  const bubbles = document.getElementById('bubbles-1');
+  // update role labels
+  bubbles.querySelectorAll('.bubble-role').forEach(r => {
+    r.textContent = '✨ ' + name;
+    r.className = 'bubble-role ' + (state.name ? 'taquito' : 'assistant');
+  });
+  updateToneChat();
+}
+
+const toneGreetings = {
+  friendly: (n) => `¡Hola! 😊 Soy ${n}, el asistente de este negocio. Estoy aquí para ayudarte con lo que necesites. ¿En qué te puedo ayudar hoy?`,
+  direct:   (n) => `Hola. Soy ${n}. ¿En qué te ayudo?`,
+  creative: (n) => `¡Hooola! 🎉🎊 Soy ${n} y estoy súper emocionado de ayudarte! ¡Dime todo lo que necesitas y lo resolvemos juntos!`,
+  pro:      (n) => `Buenos días. Mi nombre es ${n} y estoy a su disposición. ¿En qué puedo asistirle el día de hoy?`,
+};
+
+function selectTone(el, tone, icon, label, desc) {
+  document.querySelectorAll('#tone-cards .card-option').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.tone = tone;
+  state.toneLabel = label;
+  updateToneChat();
+}
+
+function updateToneChat() {
+  const name = state.name || 'Asistente';
+  if (!state.tone) return;
+  const bubbles = document.getElementById('bubbles-1');
+  // Add or update a preview bubble
+  let preview = document.getElementById('tone-preview');
+  if (!preview) {
+    preview = document.createElement('div');
+    preview.id = 'tone-preview';
+    preview.className = 'bubble';
+    bubbles.appendChild(preview);
+  }
+  preview.innerHTML = `
+    <div class="bubble-role taquito">✨ ${name}</div>
+    <div class="bubble-text">${toneGreetings[state.tone](name)}</div>
+  `;
+  bubbles.scrollTop = bubbles.scrollHeight;
+}
+
+// ── STEP 2: BUSINESS ───────────────────────────────
+function updateBizChat() {
+  state.bizName = document.getElementById('biz-name').value;
+  const name = state.name || 'Asistente';
+  const biz = state.bizName;
+  if (biz) {
+    document.getElementById('chat2-text').textContent =
+      `Perfecto. Entonces soy el asistente de "${biz}". Cuando alguien me pregunte, ya sé cómo presentar el negocio.`;
+  }
+}
+
+function selectBiz(el, label, icon) {
+  document.querySelectorAll('#biz-cards .card-option').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.bizType = label;
+  const name = state.name || 'Asistente';
+  const biz = state.bizName || 'tu negocio';
+  document.getElementById('chat2-text').textContent =
+    `${icon} Entendido — "${biz}" es de ${label}. Eso me ayuda a hablar con el vocabulario correcto con tus clientes.`;
+  document.getElementById('bubbles-2').scrollTop = 999;
+}
+
+// ── STEP 3: PRODUCTS ───────────────────────────────
+function updateProductsChat() {
+  state.products = document.getElementById('products-text').value;
+  const lines = state.products.split('\n').filter(l => l.trim());
+  const name = state.name || 'Asistente';
+  if (lines.length > 0) {
+    document.getElementById('chat3-text').textContent =
+      `Listo, ya conozco ${lines.length} producto${lines.length > 1 ? 's' : ''}. Si alguien pregunta precios o qué hay disponible, ya sé qué responder.`;
+  }
+}
+
+// ── STEP 4: SCHEDULE ───────────────────────────────
+function toggleDay(btn) {
+  btn.classList.toggle('active');
+  updateScheduleChat();
+}
+function updateScheduleChat() {
+  const open  = document.getElementById('time-open')?.value  || '9:00 AM';
+  const close = document.getElementById('time-close')?.value || '6:00 PM';
+  state.scheduleOpen = open; state.scheduleClose = close;
+  const name = state.name || 'Asistente';
+  const days = [...document.querySelectorAll('.day-btn.active')].map(b => b.textContent).join(', ');
+  if (days) {
+    document.getElementById('chat4-text').textContent =
+      `Perfecto. Los días ${days} de ${open} a ${close} respondo de inmediato. Fuera de ese horario aviso a los clientes y los capturo.`;
+  }
+}
+
+// ── STEP 5: FAQ ────────────────────────────────────
+let faqCount = 3;
+function addFaqRow() {
+  faqCount++;
+  const list = document.getElementById('faq-list');
+  const row = document.createElement('div');
+  row.className = 'faq-row';
+  row.innerHTML = `
+    <div class="faq-num">${faqCount}</div>
+    <input type="text" placeholder="Pregunta ${faqCount}" oninput="updateFaqChat()">
+    <div class="faq-arrow">→</div>
+    <input type="text" placeholder="Respuesta ${faqCount}" oninput="updateFaqChat()">
+  `;
+  list.appendChild(row);
+}
+function updateFaqChat() {
+  const rows = document.querySelectorAll('#faq-list .faq-row');
+  const pairs = [];
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    if (inputs[0].value && inputs[1].value) {
+      pairs.push({ q: inputs[0].value, a: inputs[1].value });
+    }
+  });
+  state.faqs = pairs;
+  const name = state.name || 'Asistente';
+  if (pairs.length > 0) {
+    document.getElementById('chat5-text').textContent =
+      `Ya tengo ${pairs.length} pregunta${pairs.length > 1 ? 's' : ''} frecuente${pairs.length > 1 ? 's' : ''}. Ejemplo: si alguien pregunta "${pairs[0].q}", yo respondo: "${pairs[0].a}".`;
+    document.getElementById('bubbles-5').scrollTop = 999;
+  }
+}
+
+// ── GENERIC CARD SELECT ────────────────────────────
+function selectCard(el, parentSelector) {
+  document.querySelectorAll(parentSelector + ' .card-option').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── SANDBOX CHAT ───────────────────────────────────
+const sandboxResponses = [
+  (name) => `¡Gracias por escribir! 😊 Soy ${name}, el asistente de este negocio. En este momento puedo ayudarte con información de productos, horarios y precios.`,
+  () => `Claro que sí. Te paso la información que necesitas en un momento.`,
+  (name, biz) => `En ${biz || 'nuestro negocio'} estamos felices de atenderte. ¿Hay algo más en lo que te pueda ayudar?`,
+  (name) => `Esa es una buena pregunta. Déjame verificar la información y te respondo de inmediato, ${name}.`,
+  () => `¡Por supuesto! Tenemos disponibilidad. ¿Te gustaría que te pasara los detalles completos?`,
+  () => `Nuestro horario de atención es de ${state.scheduleOpen} a ${state.scheduleClose}. Cualquier mensaje fuera de ese horario lo atendemos al abrir.`,
+];
+let sandboxIdx = 0;
+
+function sendSandbox(e) { if (e.key === 'Enter') sendSandboxBtn(); }
+
+function sendSandboxBtn() {
+  const input = document.getElementById('sandbox-msg');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const bubbles = document.getElementById('bubbles-final');
+  const name = state.name || 'Taquito';
+
+  // User bubble
+  const userBubble = document.createElement('div');
+  userBubble.className = 'bubble';
+  userBubble.style.background = 'var(--brand-10)';
+  userBubble.style.borderRadius = '16px 0 16px 16px';
+  userBubble.style.marginLeft = 'auto';
+  userBubble.style.maxWidth = '80%';
+  userBubble.innerHTML = `<div class="bubble-text" style="color:var(--brand)">${msg}</div>`;
+  bubbles.appendChild(userBubble);
+  bubbles.scrollTop = 9999;
+
+  // Typing
+  const typing = document.createElement('div');
+  typing.className = 'bubble typing show';
+  typing.style.background = 'transparent';
+  typing.style.boxShadow = 'none';
+  typing.style.padding = '4px 8px';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  bubbles.appendChild(typing);
+  bubbles.scrollTop = 9999;
+
+  setTimeout(() => {
+    bubbles.removeChild(typing);
+    const resp = sandboxResponses[sandboxIdx % sandboxResponses.length](name, state.bizName);
+    sandboxIdx++;
+    const botBubble = document.createElement('div');
+    botBubble.className = 'bubble';
+    botBubble.innerHTML = `
+      <div class="bubble-role taquito">✨ ${name}</div>
+      <div class="bubble-text">${resp}</div>
+    `;
+    bubbles.appendChild(botBubble);
+    bubbles.scrollTop = 9999;
+  }, 1200);
+}
+
+// ── ACTIVATE ───────────────────────────────────────
+function activate() {
+  const name = state.name || 'Taquito';
+  showToast(`✅ ¡${name} está activo y listo para atender a tus clientes!`);
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// ── INIT ───────────────────────────────────────────
+// Pre-select first tone card
+document.querySelector('#tone-cards .card-option').classList.add('selected');
+state.tone = 'friendly';
+</script>
+</body>
+</html>

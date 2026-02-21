@@ -33,51 +33,13 @@
     --shadow-md:0 4px 20px rgba(98,70,234,.12);
   }
 
-  html, body { height: 100%; font-family: 'Sora', sans-serif; background: #E8E8F0; }
+  html, body { height: 100%; font-family: 'Sora', sans-serif; background: #F5F5FA; }
 
-  /* ── BROWSER CHROME ── */
+  /* ── APP SHELL ── */
   .browser {
-    width: 1440px; min-height: 100vh;
-    margin: 0 auto;
+    width: 100%; min-height: 100vh;
     background: var(--white);
-    box-shadow: 0 0 60px rgba(0,0,0,.2);
     display: flex; flex-direction: column;
-  }
-  .browser-chrome {
-    background: #DEDEE8;
-    padding: 8px 12px 0;
-    flex-shrink: 0;
-  }
-  .browser-dots { display: flex; gap: 6px; padding: 6px 0 8px; }
-  .browser-dots span {
-    width: 12px; height: 12px; border-radius: 50%;
-  }
-  .browser-dots span:nth-child(1) { background: #FF5F57; }
-  .browser-dots span:nth-child(2) { background: #FEBC2E; }
-  .browser-dots span:nth-child(3) { background: #28C840; }
-  .browser-tab {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--white); border-radius: 8px 8px 0 0;
-    padding: 6px 14px; font-size: 12px; color: var(--grey-60);
-    font-family: 'Inter', sans-serif;
-  }
-  .browser-tab-icon { width: 14px; height: 14px; background: var(--brand-10); border-radius: 3px; }
-  .browser-urlbar {
-    background: #E8E8F0; display: flex; gap: 12px;
-    align-items: center; padding: 6px 12px;
-  }
-  .browser-nav { display: flex; gap: 8px; }
-  .browser-nav button {
-    background: none; border: none; cursor: pointer;
-    color: #888; font-size: 14px; padding: 2px 4px;
-    font-family: 'Inter', sans-serif;
-  }
-  .browser-url {
-    flex: 1; background: var(--white); border: none;
-    border-radius: 20px; padding: 5px 14px;
-    font-size: 12px; color: var(--grey-60);
-    font-family: 'Inter', sans-serif;
-    outline: none;
   }
 
   /* ── TOPBAR ── */
@@ -111,13 +73,11 @@
   }
 
   /* ── SCREEN WRAPPER ── */
-  .screen { display: none; flex: 1; }
-  .screen.active { display: flex; }
+  .screen { display: none !important; width: 100%; }
+  .screen.active { display: flex !important; min-height: calc(100vh - 80px); }
 
   /* ── ONBOARDING LAYOUT ── */
-  .onboarding-layout {
-    display: flex; flex: 1;
-  }
+  .onboarding-layout { display: flex; width: 100%; }
 
   /* ── CHAT PANEL ── */
   .chat-panel {
@@ -128,6 +88,7 @@
     display: flex; flex-direction: column;
     overflow: hidden;
     position: relative;
+    min-height: calc(100vh - 128px);
   }
   .chat-bubbles {
     flex: 1; padding: 32px 24px 20px;
@@ -487,29 +448,6 @@
 <body>
 
 <div class="browser">
-
-  <!-- BROWSER CHROME -->
-  <div class="browser-chrome">
-    <div class="browser-dots">
-      <span></span><span></span><span></span>
-    </div>
-    <div style="display:flex; gap:0; align-items:flex-end;">
-      <div class="browser-tab">
-        <div class="browser-tab-icon"></div>
-        Google
-      </div>
-      <div class="browser-tab" style="background:#f0f0f8; color:#6246EA; font-weight:600;">
-        <div class="browser-tab-icon" style="background:#6246EA;"></div>
-        Asistente virtual — Leadsales
-      </div>
-    </div>
-    <div class="browser-urlbar">
-      <div class="browser-nav">
-        <button>←</button><button>→</button><button>↺</button>
-      </div>
-      <input class="browser-url" type="text" value="leadsales.io/asistente/configurar" readonly>
-    </div>
-  </div>
 
   <!-- TOPBAR -->
   <div class="topbar">
